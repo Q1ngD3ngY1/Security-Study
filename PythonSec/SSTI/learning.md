@@ -57,6 +57,7 @@ Jinja2模板同样支持控制语句，像在`{%…%}`块中。
 ![alt text](images/image11.png)
 \
 > (10) `__getattribute__()` : **实例、类、函数都具有的魔术方法**。事实上，在实例化的对象进行.操作的时候（形如:a.xxx/a.xxx() 都会自动去调用此方法。因此我们同样可以**直接通过这个方法来获取到实例、类、函数的属性。**
+
 > (11) `__getitem__()` : 调用字典中的键值，其实就是调用这个魔术方法，比如a['b']，就是`a.__getitem__('b')`, 例如：\
 ![alt text](images/image13.png)
 \
@@ -450,7 +451,7 @@ chr函数转换：
 ''.__class__ = ''["__clall__"|replace("ll","ss")]
 ```
 
-### 2.1 过滤中括号
+### 2.1 过滤中括号`[]`
 #### `__getitem__`或`__getattribute__`
 ```python
 # __getitem__用于获取字典中的键值
@@ -485,7 +486,7 @@ url_for.__globals__.setdefault('__builtins__')#和get类似
 ```
 
 
-### 2.2 过滤下划线
+### 2.2 过滤下划线`_`
 #### request方法
 ```python
 {{request|attr([request.args.usc*2,request.args.class,request.args.usc*2]|join)}}&class=class&usc=_
@@ -514,7 +515,7 @@ Unicode编码：
 ```
 
 
-### 2.3 过滤.
+### 2.3 过滤`.`
 #### 中括号
 ```python
 ''.__class__ = ''["__class__"]
@@ -525,7 +526,7 @@ Unicode编码：
 ```
 
 
-### 2.4 过滤{}
+### 2.4 过滤`{}`
 #### `{%%}`绕过
 ```python
 {% for c in [].__class__.__base__.__subclasses__() %}
@@ -622,10 +623,10 @@ http://127.0.0.1:5000/mumu?{{(dict(Q1ngD3ng=a)|join|count)}}
 
 
 ## 参考
-[\[1\] SSTI服务端模板注入漏洞原理详解及利用姿势集锦](https://www.cnblogs.com/2ha0yuk7on/p/16648850.html)
-[\[2\] SSTI进阶](https://chenlvtang.top/2021/03/31/SSTI%E8%BF%9B%E9%98%B6/#google_vignette)
-[\[3\] Python中的SSTI之Jinja2](https://jarenl.com/index.php/2024/11/15/jinja2/)
-[\[4\] SSTI(Server-Side Template Injection)模板注入的初学习](https://www.cnblogs.com/NbCares/articles/17521233.html)
-[\[5\] 一文了解SSTI和所有常见payload 以flask模板为例](https://cloud.tencent.com/developer/article/2130787)
-[\[6\] jinja官方文档--内置过滤器清单](https://jinja.palletsprojects.com/en/stable/templates/#jinja-filters.abs)
+[\[1\] SSTI服务端模板注入漏洞原理详解及利用姿势集锦](https://www.cnblogs.com/2ha0yuk7on/p/16648850.html)\
+[\[2\] SSTI进阶](https://chenlvtang.top/2021/03/31/SSTI%E8%BF%9B%E9%98%B6/#google_vignette)\
+[\[3\] Python中的SSTI之Jinja2](https://jarenl.com/index.php/2024/11/15/jinja2/)\
+[\[4\] SSTI(Server-Side Template Injection)模板注入的初学习](https://www.cnblogs.com/NbCares/articles/17521233.html)\
+[\[5\] 一文了解SSTI和所有常见payload 以flask模板为例](https://cloud.tencent.com/developer/article/2130787)\
+[\[6\] jinja官方文档--内置过滤器清单](https://jinja.palletsprojects.com/en/stable/templates/#jinja-filters.abs)\
 [\[7\] Python SSTI利用jinja过滤器进行Bypass](https://cloud.tencent.com/developer/article/2287112)
