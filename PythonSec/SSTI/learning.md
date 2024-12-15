@@ -11,7 +11,7 @@
 
 #### SSTI
 SSTI主要常见于Python框架例如jinja2、mako、tornado、django，PHP 框架 smarty、twig，Java 框架 jade、velocity 等等，这些模板引擎的tags如下：
-![](images/image1.png)
+![1](images/image1.png)
 
 由于Python的jinja2遇到的比较多，因此接下来从jinja2入手展开来讲。
 
