@@ -26,43 +26,59 @@ Jinja2模板同样支持控制语句，像在`{%…%}`块中。
 一般常用的内置属性及函数如下(例子均在本地开的一个环境中复现的)：
 > (1) <mark>`__class__`</mark> : 用于查看对象(实例)所属的类，如：\
 ![alt text](images/image2.png)
+\
 > (2) <mark> `__bases__`</mark> : **用于查看当前类的直接父类或基类，是一个包含父类的元组**，仅在类对象上有效，同时也可以用数组索引来查看特定位置的值。**需要注意的是只会列出直接父类，不包含继承链中的间接父类**。如：\
 ![alt text](images/image3.png)
+\
 > (3) <mark> `__base__`</mark> : 用于直接获取基类，如：\
 ![alt text](images/image4.png)
+\
 > (4) `__mro__` : 全称是`Method Resolution Order`，即`方法解析顺序`，**用于表示类的继承顺序**，如：\
 ![alt text](images/image5.png)
+\
 > (5) <mark>`__globals__`</mark> : 用于表示当前函数或方法的全局命名空间（即当前函数所在模块的全局作用域）。如：\
 ![alt text](images/image6.png)
+\
 > (6) <mark>`__init__`</mark> : 调用初始化函数，可以用来跳到__globals__，例如：\
     ```
     {{config.__class__.__init__.__globals__['os']}}
     ```
     ![alt text](images/image9.png)
+\
 > (7) `__subclasses__()` : 返回子类列表，例如：\
 ![alt text](images/image7.png)
+\
 > (8) <mark>`__builtins__`</mark> : 包含了 Python 解释器的所有内置函数、异常、类型和其他对象,可以访问 Python 的所有内置对象。例如：\
 ![alt text](images/image8.png)
 ![alt text](images/image10.png)
+\
 > (9) `__dict__` : 返回类的静态函数、类函数、普通函数、全局变量以及一些内置的属性。例如：\
 ![alt text](images/image11.png)
-> (10) `__getattribute__()` : **实例、类、函数都具有的魔术方法**。事实上，在实例化的对象进行.操作的时候（形如:a.xxx/a.xxx() 都会自动去调用此方法。因此我们同样可以**直接通过这个方法来获取到实例、类、函数的属性。**例如：\
+\
+> (10) `__getattribute__()` : **实例、类、函数都具有的魔术方法**。事实上，在实例化的对象进行.操作的时候（形如:a.xxx/a.xxx() 都会自动去调用此方法。因此我们同样可以**直接通过这个方法来获取到实例、类、函数的属性。**
 > (11) `__getitem__()` : 调用字典中的键值，其实就是调用这个魔术方法，比如a['b']，就是`a.__getitem__('b')`, 例如：\
 ![alt text](images/image13.png)
+\
 > (12) `__builtins__` : 内建名称空间，内建名称空间有许多名字到对象之间映射，而这些名字其实就是内建函数的名称，对象就是这些内建函数本身。即里面有很多常用的函数。例如：\
 ![alt text](images/image14.png)
+\
 > (13) <mark>`__import__`</mark> : 动态加载类和函数，也就是导入模块，经常用于导入os模块，`__import__('os').popen('ls').read()`:\
 ![alt text](images/image15.png)
+\
 > (14) `__str__()` : 返回描写这个对象的字符串，可以理解成就是打印出来。例如：\
 ![](images/image16.png)
+\
 > (15) <mark>`url_for`</mark> : flask的一个方法，可以用于得到`__builtins__`，而且`url_for.__globals__['__builtins__']`含有current_app. 例如：\
 ![alt text](images/image17.png)
+\
 > (16) `get_flashed_messages` : flask的一个方法，可以用于得到__builtins__。而且`get_flashed_messages.__globals__['__builtins__']`含有current_app例如：\
 ![alt text](images/image18.png)
+\
 > (17) `lipsum` : flask的一个方法，可以用于得到__builtins__，而且lipsum.__globals__含有os模块：`{{lipsum.__globals__['os'].popen('ls').read()}}`\
 > (18) `current_app` : 应用上下文，一个全局变量\
 > (19) `config` : 当前application的所有配置。可以用于得到`__builtins__`。\
 ![alt text](images/image19.png)
+\
 > (20) `request` : 也可以用来获取`__builtins__`.\
 ![alt text](images/image20.png) 
 
@@ -226,6 +242,7 @@ lipsum               {{lipsum.__globals__['os']['popen']('ls').read()}}
 ### 过滤器
 对于过滤器的定义，官方解释如下：
 ![alt text](images/image23.png)
+
 翻译过来就是：
 > 变量可以通过过滤器进行修改，过滤器与变量之间用管道符号（|）隔开，括号中可以有可选参数。可以链接多个过滤器。一个过滤器的输出应用于下一个过滤器。\
 > 例如，{{ name|striptags|title }} 将删除变量名中的所有HTML标记，并将title大小写为输出(title(striptags(name)))\
